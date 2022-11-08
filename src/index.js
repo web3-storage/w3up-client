@@ -1,14 +1,14 @@
+import * as API from '@ucanto/interface' // eslint-disable-line no-unused-vars
 import * as defaults from './defaults.js'
 import {
   delegationToString,
-  stringToDelegation,
+  stringToDelegation
 } from './delegation/encoding.js'
 import { generateDelegation } from './delegation/generation.js'
 import { Access, Store } from './store/index.js'
 import { checkUrl, sleep } from './utils.js'
 import { Delegation, UCAN } from '@ucanto/core'
-import * as API from '@ucanto/interface'
-import { SigningPrincipal } from '@ucanto/principal'
+import { Signer } from '@ucanto/principal/ed25519'
 import * as CAR from '@ucanto/transport/car'
 // @ts-ignore
 import * as Upload from '@web3-storage/access/capabilities/upload'
@@ -32,7 +32,7 @@ export { stringToDelegation } from './delegation/encoding.js'
  * @param {ClientOptions} options
  * @returns {Client}
  */
-export function createClient(options) {
+export function createClient (options) {
   return new Client(options)
 }
 
@@ -41,7 +41,7 @@ class Client {
    * Create an instance of the w3 client.
    * @param {ClientOptions} options
    */
-  constructor({ serviceDID, serviceURL, accessURL, accessDID, settings }) {
+  constructor ({ serviceDID, serviceURL, accessURL, accessDID, settings }) {
     this.serviceURL = new URL(serviceURL || defaults.SERVICE_URL)
     this.serviceDID = serviceDID || defaults.W3_STORE_DID
     this.accessURL = new URL(accessURL || defaults.ACCESS_URL)
@@ -52,68 +52,86 @@ class Client {
     this.w3upConnection = Store.createConnection({
       id: this.serviceDID,
       url: this.serviceURL,
-      fetch,
+      fetch
     })
 
     this.accessConnection = Access.createConnection({
       id: this.accessDID,
       url: this.accessURL,
-      fetch,
+      fetch
     })
   }
 
-  static async create() {}
+  static async create () {}
 
   /**
    * Get the current "machine" DID
-   * @returns {Promise<API.SigningPrincipal>}
+   * @returns {Promise<API.Signer>}
    */
-  async agent() {
-    let secret = this.settings.agent_secret
+  async agent () {
+    const secret = this.settings.agent_secret
 
     if (secret) {
-      return SigningPrincipal.parse(secret)
+      return Signer.parse(secret)
     }
 
-    const principal = await SigningPrincipal.generate()
-    this.settings.agent_secret = SigningPrincipal.format(principal)
+    const principal = await Signer.generate()
+    this.settings.agent_secret = Signer.format(principal)
 
     return principal
   }
 
   /**
    * Get the current "account" DID
-   * @returns {Promise<API.SigningPrincipal>}
+   * @returns {Promise<API.Signer>}
    */
-  async account() {
-    let secret = this.settings.account_secret
+  async account () {
+    const secret = this.settings.account_secret
 
     if (secret) {
-      return SigningPrincipal.parse(secret)
+      return Signer.parse(secret)
     }
 
-    const account = await SigningPrincipal.generate()
+    const account = await Signer.generate()
+    this.settings.account_secret = Signer.format(account)
+    this.settings.account = account.did()
+
+    await this.buildSelfDelegation(account)
+    return account
+  }
+
+  /**
+    * @param {API.Signer} account
+    */
+  async buildSelfDelegation (account) {
     const agent = await this.agent()
+
+    if (!this.settings.delegations) {
+      this.settings.delegations = {}
+    }
+
     const del = await generateDelegation(
       { to: agent.did(), issuer: account },
       true
     )
-    if (!this.settings.delegations) {
-      this.settings.delegations = {}
-    }
-    this.settings.account_secret = SigningPrincipal.format(account)
-    this.settings.account = account.did()
-    this.settings.delegations[account.did()] = {
+
+    const accountDID = account.did()
+    this.settings.delegations[accountDID] = {
       alias: 'self',
-      ucan: await delegationToString(del),
+      ucan: await delegationToString(del)
     }
-    return account
   }
 
-  async currentDelegation() {
+  async currentDelegation () {
     const account = this.settings.account
     if (!account) {
       throw new Error('No current account')
+    }
+    if (!this.settings.account_secret) {
+      throw new Error('No account setup')
+    }
+    if (!this.settings.delegations) {
+      await this.buildSelfDelegation(Signer.parse(this.settings.account_secret))
     }
     const del = this.settings.delegations[account]
 
@@ -122,8 +140,8 @@ class Client {
 
   /**
    * @typedef {object} IdentityInfo
-   * @property {API.SigningPrincipal} agent - The local agent principal
-   * @property {API.SigningPrincipal} account - The local account principal
+   * @property {API.Signer} agent - The local agent principal
+   * @property {API.Signer} account - The local account principal
    * @property {API.DID} with - The current acccount (delegated) DID
    * @property {Array<API.Delegation>} proofs - The current delegation as a proof set.
    */
@@ -131,7 +149,7 @@ class Client {
   /**
    * @returns {Promise<IdentityInfo>}
    */
-  async identity() {
+  async identity () {
     const agent = await this.agent()
     const account = await this.account()
     const delegation = await this.currentDelegation()
@@ -144,7 +162,7 @@ class Client {
       agent,
       account,
       with: this.settings.account,
-      proofs: [delegation],
+      proofs: [delegation]
     }
   }
 
@@ -152,7 +170,7 @@ class Client {
    * Register a user by email.
    * @param {string|undefined} email - The email address to register with.
    */
-  async register(email) {
+  async register (email) {
     const savedEmail = this.settings.email
     if (!savedEmail) {
       this.settings.email = email
@@ -174,9 +192,9 @@ class Client {
           with: identity.account.did(),
           audience: this.accessConnection.id,
           caveats: {
-            as: `mailto:${email}`,
+            as: `mailto:${email}`
           },
-          proofs: identity.proofs,
+          proofs: identity.proofs
         })
         .execute(this.accessConnection)
       if (result?.error) {
@@ -206,9 +224,9 @@ class Client {
           with: first.with,
           caveats: {
             // @ts-ignore
-            as: first.as,
+            as: first.as
           },
-          proofs: [proof],
+          proofs: [proof]
         })
         .execute(this.accessConnection)
 
@@ -226,7 +244,7 @@ class Client {
   /**
    * @returns {Promise<Result>}
    */
-  async whoami() {
+  async whoami () {
     // @ts-ignore
     return await this.invoke(Access.identify, this.accessConnection)
   }
@@ -235,7 +253,7 @@ class Client {
    * List all of the cars connected to this user.
    * @returns {Promise<Result>}
    */
-  async stat() {
+  async stat () {
     // @ts-ignore
     return this.invoke(Store.list, this.w3upConnection, {})
   }
@@ -244,7 +262,7 @@ class Client {
    * List all of the uploads connected to this user.
    * @returns {Promise<Result>}
    */
-  async list() {
+  async list () {
     return this.invoke(Upload.list, this.w3upConnection, {})
   }
 
@@ -257,21 +275,22 @@ class Client {
   /**
    * @param {DelegationOptions} opts
    */
-  async makeDelegation(opts) {
+  async makeDelegation (opts) {
     return generateDelegation(
       {
         issuer: await this.account(),
         to: opts.to,
-        expiration: opts.expiration,
+        expiration: opts.expiration
       },
       true
     )
   }
+
   /**
    * @param {DelegationOptions} opts
    * @returns {Promise<string>} delegation
    */
-  async exportDelegation(opts) {
+  async exportDelegation (opts) {
     return await delegationToString(await this.makeDelegation(opts))
   }
 
@@ -280,13 +299,13 @@ class Client {
    * @param {string} alias
    * @returns {Promise<API.Delegation>}
    */
-  async importDelegation(delegationString, alias = '') {
+  async importDelegation (delegationString, alias = '') {
     const imported = await stringToDelegation(delegationString)
     const did = imported.issuer.did()
 
     const audience = imported.audience.did()
     const id = (await this.agent()).did()
-    if (id != audience) {
+    if (id !== audience) {
       throw new Error(
         `Cannot import delegation, it was issued to ${audience} and your did is ${id}`
       )
@@ -303,12 +322,12 @@ class Client {
    * @param {string|undefined} [origin] - the CID of the previous car chunk.
    * @returns {Promise<strResult>}
    */
-  async upload(bytes, origin) {
+  async upload (bytes, origin) {
     try {
       const link = await CAR.codec.link(bytes)
       const params = {
         link,
-        size: bytes.byteLength,
+        size: bytes.byteLength
       }
       if (origin) {
         // @ts-ignore
@@ -332,7 +351,7 @@ class Client {
         method: 'PUT',
         mode: 'cors',
         body: bytes,
-        headers: result.headers,
+        headers: result.headers
       })
 
       if (!response.ok) {
@@ -352,10 +371,10 @@ class Client {
    * @param {API.Link} dataCID
    * @param {Array<API.Link>} shardCIDs
    */
-  async uploadAdd(dataCID, shardCIDs) {
+  async uploadAdd (dataCID, shardCIDs) {
     const result = await this.invoke(Upload.add, this.w3upConnection, {
       root: dataCID,
-      shards: shardCIDs,
+      shards: shardCIDs
     })
     if (result?.error !== undefined) {
       throw new Error(JSON.stringify(result, null, 2))
@@ -368,10 +387,10 @@ class Client {
    * Remove an uploaded file by CID
    * @param {API.Link} link - the CID to remove
    */
-  async remove(link) {
+  async remove (link) {
     // @ts-ignore
     const result = await this.invoke(Store.remove, this.w3upConnection, {
-      root: link,
+      root: link
     })
 
     if (result?.error !== undefined) {
@@ -384,9 +403,9 @@ class Client {
    * Remove an uploaded file by CID
    * @param {API.Link} link - the CID to remove
    */
-  async removeUpload(link) {
+  async removeUpload (link) {
     const result = await this.invoke(Upload.remove, this.w3upConnection, {
-      root: link,
+      root: link
     })
     if (result?.error !== undefined) {
       throw new Error(JSON.stringify(result, null, 2))
@@ -400,7 +419,7 @@ class Client {
    * @param {any} caveats
    * @returns {Promise<any>}
    */
-  async invoke(capability, connection, caveats) {
+  async invoke (capability, connection, caveats) {
     const identity = await this.identity()
     return await capability
       .invoke({
@@ -408,7 +427,7 @@ class Client {
         with: identity.with,
         audience: connection.id,
         proofs: identity.proofs,
-        caveats,
+        caveats
       })
       .execute(connection)
   }
@@ -417,17 +436,17 @@ class Client {
    * @param {API.Link} link - the CID to get insights for
    * @returns {Promise<object>}
    */
-  async insights(link) {
+  async insights (link) {
     await fetch(defaults.insightsAPI + '/insights', {
       method: 'POST',
-      body: JSON.stringify({ cid: link }),
+      body: JSON.stringify({ cid: link })
     }).then((res) => res.json())
 
     await sleep(1000)
 
     const insights = await fetch(defaults.insightsAPI + '/insights', {
       method: 'POST',
-      body: JSON.stringify({ cid: link }),
+      body: JSON.stringify({ cid: link })
     }).then((res) => res.json())
 
     return insights

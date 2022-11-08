@@ -1,10 +1,11 @@
-import * as API from '@ucanto/interface'
-import { Principal } from '@ucanto/principal'
+import * as API from '@ucanto/interface' // eslint-disable-line no-unused-vars
+import { Verifier } from '@ucanto/principal/ed25519'
 import { Delegation } from '@ucanto/server'
 import { codec as CAR } from '@ucanto/transport/car'
 
+/** @typedef {{ roots: [API.UCANBlock], blocks: Map<string, API.Block> }} DelegationArchive */
+
 /**
- * @typedef {{ roots: [API.UCANBlock], blocks: Map<string, API.Block> }} DelegationArchive
  * @param {API.Delegation} delegation
  * @return {Promise<API.ByteView<DelegationArchive>>}
  */
@@ -15,6 +16,7 @@ export const exportDelegation = async (delegation) => {
   for (const block of delegation.export()) {
     blocks.set(block.cid.toString(), block)
   }
+
   return CAR.encode({ roots: [root], blocks })
 }
 
@@ -34,39 +36,39 @@ export const importDelegation = async (bytes) => {
  * @async
  * @param {{
  *   to: API.DID,
- *   issuer: API.SigningPrincipal
+ *   issuer: API.Signer
  *   expiration?: number
  * }} opts
  * @param {boolean} [ includeAccountCaps ]
  */
-export async function generateDelegation(opts, includeAccountCaps = false) {
-  const delegatedTo = Principal.parse(opts.to)
+export async function generateDelegation (opts, includeAccountCaps = false) {
+  const delegatedTo = Verifier.parse(opts.to)
 
   let capabilities = [
     {
       can: 'store/*',
-      with: opts.issuer.did(),
+      with: opts.issuer.did()
     },
     {
       can: 'upload/*',
-      with: opts.issuer.did(),
-    },
+      with: opts.issuer.did()
+    }
   ]
 
   if (includeAccountCaps) {
     capabilities = capabilities.concat([
       {
         can: 'identity/identify',
-        with: opts.issuer.did(),
+        with: opts.issuer.did()
       },
       {
         can: 'identity/validate',
-        with: opts.issuer.did(),
+        with: opts.issuer.did()
       },
       {
         can: 'identity/register',
-        with: opts.issuer.did(),
-      },
+        with: opts.issuer.did()
+      }
     ])
   }
 
@@ -77,7 +79,7 @@ export async function generateDelegation(opts, includeAccountCaps = false) {
     audience: delegatedTo,
     // @ts-ignore
     capabilities,
-    expiration: Date.now() + offset,
+    expiration: Date.now() + offset
   })
 
   return storeAllDelegated
@@ -87,11 +89,11 @@ export async function generateDelegation(opts, includeAccountCaps = false) {
  * @async
  * @param {{
  *   to: API.DID,
- *   issuer: API.SigningPrincipal
+ *   issuer: API.Signer
  *   expiration?: number
  * }} opts
  * @returns {Promise<Uint8Array>}
  */
-export async function buildDelegationCar(opts) {
+export async function buildDelegationCar (opts) {
   return exportDelegation(await generateDelegation(opts))
 }

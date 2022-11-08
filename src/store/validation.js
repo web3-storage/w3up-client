@@ -1,4 +1,4 @@
-import * as API from '@ucanto/interface'
+import * as API from '@ucanto/interface' // eslint-disable-line no-unused-vars
 import { Failure } from '@ucanto/validator'
 
 /**
@@ -11,9 +11,9 @@ import { Failure } from '@ucanto/validator'
  * @param {U} delegated
  */
 export const equalWith = (claimed, delegated) =>
-  claimed.uri.href === delegated.uri.href ||
+  claimed.with === delegated.with ||
   new Failure(
-    `Can not derive ${claimed.can} with ${claimed.uri.href} from ${delegated.uri.href}`
+    `Can not derive ${claimed.can} with ${claimed.with} from ${delegated.with}`
   )
 
 /**

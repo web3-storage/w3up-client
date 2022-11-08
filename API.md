@@ -34,8 +34,9 @@
 
 * [Client](#Client)
     * [new Client(options)](#new_Client_new)
-    * [.agent()](#Client+agent) ⇒ <code>Promise.&lt;API.SigningPrincipal&gt;</code>
-    * [.account()](#Client+account) ⇒ <code>Promise.&lt;API.SigningPrincipal&gt;</code>
+    * [.agent()](#Client+agent) ⇒ <code>Promise.&lt;API.Signer&gt;</code>
+    * [.account()](#Client+account) ⇒ <code>Promise.&lt;API.Signer&gt;</code>
+    * [.buildSelfDelegation(account)](#Client+buildSelfDelegation)
     * [.identity()](#Client+identity) ⇒ [<code>Promise.&lt;IdentityInfo&gt;</code>](#IdentityInfo)
     * [.register(email)](#Client+register)
     * [.whoami()](#Client+whoami) ⇒ [<code>Promise.&lt;Result&gt;</code>](#Result)
@@ -63,16 +64,25 @@ Create an instance of the w3 client.
 
 <a name="Client+agent"></a>
 
-### client.agent() ⇒ <code>Promise.&lt;API.SigningPrincipal&gt;</code>
+### client.agent() ⇒ <code>Promise.&lt;API.Signer&gt;</code>
 Get the current "machine" DID
 
 **Kind**: instance method of [<code>Client</code>](#Client)  
 <a name="Client+account"></a>
 
-### client.account() ⇒ <code>Promise.&lt;API.SigningPrincipal&gt;</code>
+### client.account() ⇒ <code>Promise.&lt;API.Signer&gt;</code>
 Get the current "account" DID
 
 **Kind**: instance method of [<code>Client</code>](#Client)  
+<a name="Client+buildSelfDelegation"></a>
+
+### client.buildSelfDelegation(account)
+**Kind**: instance method of [<code>Client</code>](#Client)  
+
+| Param | Type |
+| --- | --- |
+| account | <code>API.Signer</code> | 
+
 <a name="Client+identity"></a>
 
 ### client.identity() ⇒ [<code>Promise.&lt;IdentityInfo&gt;</code>](#IdentityInfo)
@@ -238,8 +248,8 @@ Remove an uploaded file by CID
 
 | Name | Type | Description |
 | --- | --- | --- |
-| agent | <code>API.SigningPrincipal</code> | The local agent principal |
-| account | <code>API.SigningPrincipal</code> | The local account principal |
+| agent | <code>API.Signer</code> | The local agent principal |
+| account | <code>API.Signer</code> | The local account principal |
 | with | <code>API.DID</code> | The current acccount (delegated) DID |
 | proofs | <code>Array.&lt;API.Delegation&gt;</code> | The current delegation as a proof set. |
 

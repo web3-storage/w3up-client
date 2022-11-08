@@ -1,4 +1,4 @@
-import { UCAN } from '@ucanto/core'
+import { UCAN } from '@ucanto/server' // eslint-disable-line no-unused-vars
 import fetch from 'cross-fetch'
 
 /**
@@ -7,7 +7,7 @@ import fetch from 'cross-fetch'
  * @param {number} ms - The number of milliseconds to sleep for.
  * @returns {Promise<void>}
  */
-export async function sleep(ms) {
+export async function sleep (ms) {
   return new Promise((resolve) => {
     setTimeout(resolve, ms)
   })
@@ -18,7 +18,7 @@ export async function sleep(ms) {
  * @param {string} url
  * @returns {Promise<UCAN.JWT>}
  */
-export async function checkUrl(url) {
+export async function checkUrl (url) {
   //     const { account } = await this.identity()
   let count = 0
 
@@ -35,7 +35,7 @@ export async function checkUrl(url) {
         url,
         //           `${this.accessURL}validate?did=${account.did()}`,
         {
-          mode: 'cors',
+          mode: 'cors'
         }
       )
 

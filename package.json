@@ -20,20 +20,24 @@
     "pretest": "npm run prettier && npm run typecheck",
     "test": "vitest run",
     "typecheck": "tsc --noEmit",
-    "prettier": "prettier -c '{src,patches,test}/**/*.{js,ts,yml,json}' --ignore-path .gitignore",
-    "prettier:fix": "prettier --ignore-unknown --write --ignore-path .gitignore .",
+    "lint": "standard",
+    "lint:fix": "standard --fix",
     "test:coverage": "vitest run --coverage",
     "test:dev": "vitest -w"
   },
   "dependencies": {
-    "@ipld/car": "^4.1.5",
-    "@ucanto/client": "^1.0.1",
-    "@ucanto/core": "^1.0.1",
-    "@ucanto/interface": "^1.0.0",
-    "@ucanto/principal": "^1.0.1",
-    "@ucanto/server": "^1.0.2",
-    "@ucanto/transport": "^1.0.1",
-    "@ucanto/validator": "^1.0.2",
+    "@ipld/car": "4.1.6",
+    "@ipld/dag-cbor": "^8.0.0",
+    "@ipld/dag-json": "^9.0.1",
+    "@ipld/dag-pb": "^3.0.0",
+    "@ipld/unixfs": "^1.1.0-dev",
+    "@ucanto/client": "^3.0.1",
+    "@ucanto/core": "^3.0.1",
+    "@ucanto/interface": "^3.0.0",
+    "@ucanto/principal": "^3.0.0",
+    "@ucanto/server": "^3.0.1",
+    "@ucanto/transport": "^3.0.1",
+    "@ucanto/validator": "^3.0.1",
     "@web3-storage/access": "^2.1.1",
     "cross-fetch": "^3.1.5",
     "uint8arrays": "^4.0.2"
@@ -50,9 +54,6 @@
     "standard": "^17.0.0",
     "typescript": "^4.8.3",
     "vitest": "^0.23.4"
-  },
-  "resolutions": {
-    "@ucanto/validator": "^1.0.2"
   },
   "lint-staged": {
     "*.*": "prettier --write '{src,patches,test}/**/*.{js,ts,yml,json}' --ignore-path .gitignore"
