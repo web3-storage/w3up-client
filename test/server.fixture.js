@@ -1,4 +1,4 @@
-import { Principal } from '@ucanto/principal'
+import { Verifier } from '@ucanto/principal/ed25519'
 import * as Service from '@ucanto/server'
 import * as CAR from '@ucanto/transport/car'
 import * as CBOR from '@ucanto/transport/cbor'
@@ -86,7 +86,7 @@ export async function makeMockServer ({ capabilities }) {
   const service = Service.create({
     decoder: CAR,
     encoder: CBOR,
-    id: Principal.parse(fixture.did),
+    id: Verifier.parse(fixture.did),
     service: {
       identity
     }

@@ -6,14 +6,14 @@ import {
 } from '../../src/delegation/generation.js'
 import fixture from '../fixture.js'
 import { Delegation, delegate } from '@ucanto/core'
-import { Principal, SigningPrincipal } from '@ucanto/principal'
+import { Verifier, Signer } from '@ucanto/principal/ed25519'
 import { beforeEach, describe, expect, it } from 'vitest'
 
 // The two tests marked with concurrent will be run in parallel
 describe('delegation', () => {
   describe('#createDelegation', () => {
     beforeEach(async (context) => {
-      const issuer = await SigningPrincipal.generate()
+      const issuer = await Signer.generate()
 
       context.delegation = await buildDelegationCar({
         issuer,
@@ -28,7 +28,7 @@ describe('delegation', () => {
 
     it('should create a delegation with a given expiration', async () => {
       const delegation = await buildDelegationCar({
-        issuer: await SigningPrincipal.generate(),
+        issuer: await Signer.generate(),
         to: fixture.did,
         expiration: 1000
       })
@@ -40,7 +40,7 @@ describe('delegation', () => {
 
   describe('#generateDelegation', () => {
     beforeEach(async (context) => {
-      context.issuer = await SigningPrincipal.generate()
+      context.issuer = await Signer.generate()
     })
 
     it('should create a delegation with a given expiration.', async ({
@@ -98,7 +98,7 @@ describe('delegation', () => {
 
   describe('#importDelegation', () => {
     beforeEach(async (context) => {
-      const issuer = await SigningPrincipal.generate()
+      const issuer = await Signer.generate()
 
       context.audience = fixture.did
       context.issuer = issuer
@@ -122,8 +122,8 @@ describe('delegation', () => {
   })
 
   it('should export 🔁 import delegation chain', async () => {
-    const issuer = await SigningPrincipal.generate()
-    const audience = Principal.parse(fixture.did)
+    const issuer = await Signer.generate()
+    const audience = Verifier.parse(fixture.did)
     const proof = await delegate({
       issuer,
       audience,

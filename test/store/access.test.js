@@ -1,6 +1,6 @@
 import * as Identity from '../../src/store/access/client.js'
 import { makeMockServer } from '../server.fixture.js'
-import { SigningPrincipal } from '@ucanto/principal'
+import { Signer } from '@ucanto/principal/ed25519'
 import { beforeEach, describe, expect, it } from 'vitest'
 
 /** @typedef {import('@ucanto/interface')} API */
@@ -25,7 +25,7 @@ describe('access client', async () => {
   })
   describe('when client invokes', () => {
     it('should get null from mocked server.', async ({ client }) => {
-      const issuer = await SigningPrincipal.generate()
+      const issuer = await Signer.generate()
 
       const result = await Identity.validate
         .invoke({

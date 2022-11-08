@@ -3,7 +3,7 @@ import { createClient } from '../src/index.js'
 import * as Identity from '../src/store/access/client.js'
 import fixture from './fixture.js'
 import { makeMockServer } from './server.fixture.js'
-import { SigningPrincipal } from '@ucanto/principal'
+import { Signer } from '@ucanto/principal/ed25519'
 import { beforeEach, describe, expect, it } from 'vitest'
 
 // The two tests marked with concurrent will be run in parallel
@@ -25,7 +25,7 @@ describe('client', () => {
       settings
     })
 
-    context.parsedAliceAccountSecret = SigningPrincipal.parse(
+    context.parsedAliceAccountSecret = Signer.parse(
       fixture.alice_account_secret
     )
   })
@@ -89,8 +89,8 @@ describe('client', () => {
       const settings = new Map()
       settings.set(
         'secret',
-        SigningPrincipal.format(
-          SigningPrincipal.parse(fixture.alice_account_secret)
+        Signer.format(
+          Signer.parse(fixture.alice_account_secret)
         )
       )
 
