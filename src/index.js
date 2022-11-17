@@ -56,14 +56,18 @@ class Client {
   async getW3upConnection () {
     // fetch and "cache" the did.
     if (!this.serviceDID) {
-      const res = await fetch(new URL('version', this.serviceURL))
-      /** @type {{did:`did:${string}`}} */
-      const json = await res.json()
-      if (!json.did || json.did === undefined) {
-        throw new Error('Could not retrieve service DID.')
+      try {
+        const res = await fetch(new URL('version', this.serviceURL))
+        /** @type {{did:`did:${string}`}} */
+        const json = await res.json()
+        if (!json.did || json.did === undefined) {
+          throw new Error('Could not retrieve service DID.')
+        }
+        /** @type {`did:${string}`} */
+        this.serviceDID = json.did
+      } catch (err) {
+        throw new Error('Could not retrieve service DID: ' + err)
       }
-      /** @type {`did:${string}`} */
-      this.serviceDID = json.did
     }
 
     // Create and cache connection.
@@ -81,10 +85,17 @@ class Client {
   async getAccessConnection () {
     // fetch and "cache" the did.
     if (!this.accessDID) {
-      const res = await fetch(new URL('version', this.accessURL))
-      const json = await res.json()
-      /** @type {`did:${string}`} */
-      this.accessDID = json.did
+      try {
+        const res = await fetch(new URL('version', this.accessURL))
+        const json = await res.json()
+        if (!json.did || json.did === undefined) {
+          throw new Error('Could not retrieve access DID.')
+        }
+        /** @type {`did:${string}`} */
+        this.accessDID = json.did
+      } catch (err) {
+        throw new Error('Could not retrieve access DID: ' + err)
+      }
     }
 
     // Create and cache connection.

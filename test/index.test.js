@@ -33,6 +33,22 @@ describe('client', () => {
     it('should return a client.', async ({ client }) => {
       expect(client).toBeTruthy()
     })
+
+    it('should fail when service did not accessible', async ({ accessServer }) => {
+      await expect(async () => {
+        const settings = new Map()
+        settings.set('account_secret', fixture.alice_account_secret)
+        settings.set('agent_secret', fixture.alice_account_secret)
+
+        const client = createClient({
+          serviceURL: 'http://localhost',
+          accessURL: accessServer.url,
+          settings
+        })
+
+        await client.list()
+      }).rejects.toThrow('Could not retrieve service DID')
+    })
   })
 
   describe('#account', () => {
