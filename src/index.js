@@ -44,23 +44,59 @@ class Client {
    */
   constructor ({ serviceDID, serviceURL, accessURL, accessDID, settings }) {
     this.serviceURL = new URL(serviceURL || defaults.SERVICE_URL)
-    this.serviceDID = serviceDID || defaults.W3_STORE_DID
+    // @ts-expect-error
+    this.serviceDID = serviceDID // || defaults.W3_STORE_DID
     this.accessURL = new URL(accessURL || defaults.ACCESS_URL)
-    this.accessDID = accessDID || defaults.ACCESS_DID
+    // @ts-expect-error
+    this.accessDID = accessDID // || defaults.ACCESS_DID
 
     this.settings = settings
+  }
 
-    this.w3upConnection = Store.createConnection({
-      id: this.serviceDID,
-      url: this.serviceURL,
-      fetch
-    })
+  async getW3upConnection () {
+    // fetch and "cache" the did.
+    if (!this.serviceDID) {
+      const res = await fetch(new URL('version', this.serviceURL))
+      /** @type {{did:`did:${string}`}} */
+      const json = await res.json()
+      if (!json.did || json.did === undefined) {
+        throw new Error('Could not retrieve service DID.')
+      }
+      /** @type {`did:${string}`} */
+      this.serviceDID = json.did
+    }
 
-    this.accessConnection = Access.createConnection({
-      id: this.accessDID,
-      url: this.accessURL,
-      fetch
-    })
+    // Create and cache connection.
+    if (!this.w3upConnection) {
+      this.w3upConnection = Store.createConnection({
+        id: this.serviceDID,
+        url: this.serviceURL,
+        fetch
+      })
+    }
+
+    return this.w3upConnection
+  }
+
+  async getAccessConnection () {
+    // fetch and "cache" the did.
+    if (!this.accessDID) {
+      const res = await fetch(new URL('version', this.accessURL))
+      const json = await res.json()
+      /** @type {`did:${string}`} */
+      this.accessDID = json.did
+    }
+
+    // Create and cache connection.
+    if (!this.accessConnection) {
+      this.accessConnection = Access.createConnection({
+        id: this.accessDID,
+        url: this.accessURL,
+        fetch
+      })
+    }
+
+    return this.accessConnection
   }
 
   static async create () {}
@@ -166,6 +202,7 @@ class Client {
       throw new Error(`Invalid email provided for registration: ${email}`)
     }
     const identity = await this.identity()
+    const accessConnection = await this.getAccessConnection()
 
     try {
       // @ts-ignore
@@ -173,13 +210,13 @@ class Client {
         .invoke({
           issuer: identity.account,
           with: identity.account.did(),
-          audience: this.accessConnection.id,
+          audience: accessConnection.id,
           caveats: {
             as: `mailto:${email}`
           },
           proofs: identity.proofs
         })
-        .execute(this.accessConnection)
+        .execute(accessConnection)
       if (result?.error) {
         throw new Error(result?.cause?.message)
       }
@@ -203,7 +240,7 @@ class Client {
       const validate = await Access.register
         .invoke({
           issuer: identity.account,
-          audience: this.accessConnection.id,
+          audience: accessConnection.id,
           with: first.with,
           caveats: {
             // @ts-ignore
@@ -211,7 +248,7 @@ class Client {
           },
           proofs: [proof]
         })
-        .execute(this.accessConnection)
+        .execute(accessConnection)
 
       if (validate?.error) {
         // @ts-ignore
@@ -229,7 +266,7 @@ class Client {
    */
   async whoami () {
     // @ts-ignore
-    return await this.invoke(Access.identify, this.accessConnection)
+    return await this.invoke(Access.identify, await this.getAccessConnection())
   }
 
   /**
@@ -238,7 +275,7 @@ class Client {
    */
   async stat () {
     // @ts-ignore
-    return this.invoke(Store.list, this.w3upConnection, {})
+    return this.invoke(Store.list, await this.getW3upConnection(), {})
   }
 
   /**
@@ -246,7 +283,7 @@ class Client {
    * @returns {Promise<Result>}
    */
   async list () {
-    return this.invoke(Upload.list, this.w3upConnection, {})
+    return this.invoke(Upload.list, await this.getW3upConnection(), {})
   }
 
   /**
@@ -318,7 +355,7 @@ class Client {
       }
       /** @type {{status:string, with:API.DID, url:String, headers:HeadersInit, error:boolean}} */
       // @ts-ignore
-      const result = await this.invoke(Store.add, this.w3upConnection, params)
+      const result = await this.invoke(Store.add, await this.getW3upConnection(), params)
 
       if (result.error) {
         throw new Error(JSON.stringify(result, null, 2))
@@ -355,7 +392,7 @@ class Client {
    * @param {Array<API.Link>} shardCIDs
    */
   async uploadAdd (dataCID, shardCIDs) {
-    const result = await this.invoke(Upload.add, this.w3upConnection, {
+    const result = await this.invoke(Upload.add, await this.getW3upConnection(), {
       root: dataCID,
       shards: shardCIDs
     })
@@ -372,7 +409,7 @@ class Client {
    */
   async remove (link) {
     // @ts-ignore
-    const result = await this.invoke(Store.remove, this.w3upConnection, {
+    const result = await this.invoke(Store.remove, await this.getW3upConnection(), {
       root: link
     })
 
@@ -387,7 +424,7 @@ class Client {
    * @param {API.Link} link - the CID to remove
    */
   async removeUpload (link) {
-    const result = await this.invoke(Upload.remove, this.w3upConnection, {
+    const result = await this.invoke(Upload.remove, await this.getW3upConnection(), {
       root: link
     })
     if (result?.error !== undefined) {
