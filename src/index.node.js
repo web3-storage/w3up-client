@@ -4,7 +4,7 @@ import { generate } from '@ucanto/principal/ed25519'
 import { Client } from './client.js'
 
 /**
- * Create a new upload client.
+ * Create a new w3up client.
  *
  * If no backing store is passed one will be created that is appropriate for
  * the environment.

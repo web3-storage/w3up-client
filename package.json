@@ -54,11 +54,12 @@
     "@ucanto/interface": "^3.0.1",
     "@ucanto/principal": "^3.0.1",
     "@ucanto/transport": "^3.0.2",
-    "@web3-storage/access": "^8.0.0",
+    "@web3-storage/access": "^8.0.1",
     "@web3-storage/capabilities": "^1.0.0",
     "@web3-storage/upload-client": "^3.0.0"
   },
   "devDependencies": {
+    "@ucanto/server": "^3.0.8",
     "assert": "^2.0.0",
     "hundreds": "^0.0.9",
     "mocha": "^10.1.0",
@@ -92,7 +93,8 @@
   "homepage": "https://github.com/web3-storage/w3up-client#readme",
   "standard": {
     "env": {
-      "browser": true
+      "browser": true,
+      "mocha": true
     }
   }
 }
