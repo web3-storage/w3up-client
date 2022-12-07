@@ -5,8 +5,8 @@ export class Space {
   #meta
 
   /**
-   * @param {import('@ucanto/interface').DID} did 
-   * @param {Record<string, any>} meta 
+   * @param {import('@ucanto/interface').DID} did
+   * @param {Record<string, any>} meta
    */
   constructor (did, meta = {}) {
     this.#did = did

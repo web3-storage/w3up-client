@@ -13,7 +13,7 @@ export class Delegation extends CoreDelegation {
    * @param {Map<string, import('@ucanto/interface').Block>} [blocks]
    * @param {Record<string, any>} [meta]
    */
-  constructor(root, blocks, meta = {}) {
+  constructor (root, blocks, meta = {}) {
     super(root, blocks)
     this.#meta = meta
   }

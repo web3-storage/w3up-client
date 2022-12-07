@@ -3,7 +3,7 @@ import { Base } from '../base.js'
 /**
  * Client for interacting with the `space/*` capabilities.
  */
- export class SpaceClient extends Base {
+export class SpaceClient extends Base {
   /**
    * Get information about a space.
    *

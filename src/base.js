@@ -1,4 +1,4 @@
-import { Agent } from '@web3-storage/access'
+import { Agent } from '@web3-storage/access/agent'
 import { serviceConf } from './service.js'
 
 export class Base {

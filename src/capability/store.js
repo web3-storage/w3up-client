@@ -5,7 +5,7 @@ import { Base } from '../base.js'
 /**
  * Client for interacting with the `store/*` capabilities.
  */
- export class StoreClient extends Base {
+export class StoreClient extends Base {
   /**
    * Store a DAG encoded as a CAR file.
    *
