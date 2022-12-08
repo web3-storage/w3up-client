@@ -37,14 +37,13 @@
   "exclude": ["**/node_modules/**"],
   "typedocOptions": {
     "entryPoints": [
-      "./src/index.js",
-      "./src/types.ts"
+      "./src"
     ],
     "entryPointStrategy": "expand",
     "darkHighlightTheme": "github-dark",
     "navigationLinks": {
       "Github": "https://github.com/web3-storage/w3up-client"
     },
-    "customCss": "./static/docs.css"
+    "customCss": "./static/docs.css",
   }
 }

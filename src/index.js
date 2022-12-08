@@ -4,7 +4,7 @@
  * 
  * Use the static {@link create} function to create a new {@link Client} object.
  * 
- * @module lib
+ * @module 
  */
 import { AgentData } from '@web3-storage/access/agent'
 import { StoreIndexedDB } from '@web3-storage/access/stores/store-indexeddb'
