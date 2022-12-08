@@ -1,4 +1,3 @@
-
 import { uploadFile, uploadDirectory } from '@web3-storage/upload-client'
 import { Store as StoreCapabilities, Upload as UploadCapabilities } from '@web3-storage/capabilities'
 import { Base } from './base.js'
@@ -103,6 +102,7 @@ export class Client extends Base {
    * @param {object} [options]
    * @param {AbortSignal} [options.signal]
    */
+  /* c8 ignore next 3 */
   async registerSpace (email, options) {
     await this._agent.registerSpace(email, options)
   }
@@ -163,12 +163,12 @@ export class Client extends Base {
    */
   async createDelegation (audience, abilities, options = {}) {
     const audienceMeta = options.audienceMeta ?? { name: 'agent', type: 'device' }
-    const d = await this._agent.delegate({
+    const { root, blocks } = await this._agent.delegate({
       ...options,
       abilities,
       audience,
       audienceMeta
     })
-    return new Delegation(d.root, d.blocks, { audience: audienceMeta })
+    return new Delegation(root, blocks, { audience: audienceMeta })
   }
 }

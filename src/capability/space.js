@@ -18,6 +18,7 @@ export class SpaceClient extends Base {
    *
    * @param {string} email Email address to send recovery emaail to.
    */
+  /* c8 ignore next 3 */
   async recover (email) {
     return await this._agent.recover(email)
   }

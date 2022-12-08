@@ -1,7 +1,5 @@
 import assert from 'assert'
-import { connect } from '@ucanto/client'
-import * as Server from '@ucanto/server'
-import { provide } from '@ucanto/server'
+import { create as createServer, provide } from '@ucanto/server'
 import * as CAR from '@ucanto/transport/car'
 import * as CBOR from '@ucanto/transport/cbor'
 import * as Signer from '@ucanto/principal/ed25519'
@@ -10,22 +8,9 @@ import * as UploadCapabilities from '@web3-storage/capabilities/upload'
 import { AgentData } from '@web3-storage/access/agent'
 import { randomBytes } from './helpers/random.js'
 import { toCAR } from './helpers/car.js'
-import { mockService } from './helpers/mocks.js'
+import { mockService, mockServiceConf } from './helpers/mocks.js'
 import { File } from './helpers/shims.js'
 import { Client } from '../src/client.js'
-
-/**
- * @param {import('@ucanto/interface').ServerView} server 
- */
-async function mockServiceConf (server) {
-  const connection = connect({
-    id: server.id,
-    encoder: CAR,
-    decoder: CBOR,
-    channel: server,
-  })
-  return { access: connection, upload: connection }
-}
 
 describe('Client', () => {
   describe('uploadFile', () => {
@@ -40,11 +25,11 @@ describe('Client', () => {
       const service = mockService({
         store: {
           add: provide(StoreCapabilities.add, ({ invocation }) => {
-            assert.equal(invocation.issuer.did(), client.agent().did())
+            assert.equal(invocation.issuer.did(), alice.agent().did())
             assert.equal(invocation.capabilities.length, 1)
             const invCap = invocation.capabilities[0]
             assert.equal(invCap.can, StoreCapabilities.add.can)
-            assert.equal(invCap.with, client.currentSpace()?.did())
+            assert.equal(invCap.with, alice.currentSpace()?.did())
             return {
               status: 'upload',
               headers: { 'x-test': 'true' },
@@ -54,11 +39,11 @@ describe('Client', () => {
         },
         upload: {
           add: provide(UploadCapabilities.add, ({ invocation }) => {
-            assert.equal(invocation.issuer.did(), client.agent().did())
+            assert.equal(invocation.issuer.did(), alice.agent().did())
             assert.equal(invocation.capabilities.length, 1)
             const invCap = invocation.capabilities[0]
             assert.equal(invCap.can, UploadCapabilities.add.can)
-            assert.equal(invCap.with, client.currentSpace()?.did())
+            assert.equal(invCap.with, alice.currentSpace()?.did())
             assert.equal(invCap.nb?.shards?.length, 1)
             assert.equal(String(invCap.nb?.shards?.[0]), carCID?.toString())
             return {
@@ -69,20 +54,22 @@ describe('Client', () => {
         }
       })
 
-      const server = Server.create({
+      const server = createServer({
         id: await Signer.generate(),
         service,
         decoder: CAR,
         encoder: CBOR,
       })
 
-      const data = await AgentData.create()
-      const client = new Client(data, { serviceConf: await mockServiceConf(server) })
+      const alice = new Client(
+        await AgentData.create(),
+        { serviceConf: await mockServiceConf(server) }
+      )
 
-      const { did } = await client.createSpace()
-      await client.setCurrentSpace(did)
+      const { did } = await alice.createSpace()
+      await alice.setCurrentSpace(did)
 
-      const dataCID = await client.uploadFile(file, {
+      const dataCID = await alice.uploadFile(file, {
         onShardStored: meta => { carCID = meta.cid }
       })
 
@@ -96,13 +83,12 @@ describe('Client', () => {
     })
 
     it('should not allow upload without a current space', async () => {
-      const data = await AgentData.create()
-      const client = new Client(data)
+      const alice = new Client(await AgentData.create())
 
       const bytes = await randomBytes(128)
       const file = new Blob([bytes])
 
-      await assert.rejects(client.uploadFile(file), { message: 'missing current space: use createSpace() or setCurrentSpace()' })
+      await assert.rejects(alice.uploadFile(file), { message: 'missing current space: use createSpace() or setCurrentSpace()' })
     })
   })
 
@@ -119,11 +105,11 @@ describe('Client', () => {
       const service = mockService({
         store: {
           add: provide(StoreCapabilities.add, ({ invocation }) => {
-            assert.equal(invocation.issuer.did(), client.agent().did())
+            assert.equal(invocation.issuer.did(), alice.agent().did())
             assert.equal(invocation.capabilities.length, 1)
             const invCap = invocation.capabilities[0]
             assert.equal(invCap.can, StoreCapabilities.add.can)
-            assert.equal(invCap.with, client.currentSpace()?.did())
+            assert.equal(invCap.with, alice.currentSpace()?.did())
             return {
               status: 'upload',
               headers: { 'x-test': 'true' },
@@ -133,11 +119,11 @@ describe('Client', () => {
         },
         upload: {
           add: provide(UploadCapabilities.add, ({ invocation }) => {
-            assert.equal(invocation.issuer.did(), client.agent().did())
+            assert.equal(invocation.issuer.did(), alice.agent().did())
             assert.equal(invocation.capabilities.length, 1)
             const invCap = invocation.capabilities[0]
             assert.equal(invCap.can, UploadCapabilities.add.can)
-            assert.equal(invCap.with, client.currentSpace()?.did())
+            assert.equal(invCap.with, alice.currentSpace()?.did())
             assert.equal(invCap.nb?.shards?.length, 1)
             if (!invCap.nb) throw new Error('nb must be present')
             return invCap.nb
@@ -145,20 +131,22 @@ describe('Client', () => {
         }
       })
 
-      const server = Server.create({
+      const server = createServer({
         id: await Signer.generate(),
         service,
         decoder: CAR,
         encoder: CBOR,
       })
 
-      const data = await AgentData.create()
-      const client = new Client(data, { serviceConf: await mockServiceConf(server) })
+      const alice = new Client(
+        await AgentData.create(),
+        { serviceConf: await mockServiceConf(server) }
+      )
 
-      const { did } = await client.createSpace()
-      await client.setCurrentSpace(did)
+      const { did } = await alice.createSpace()
+      await alice.setCurrentSpace(did)
 
-      const dataCID = await client.uploadDirectory(files, {
+      const dataCID = await alice.uploadDirectory(files, {
         onShardStored: meta => { carCID = meta.cid }
       })
 
@@ -172,18 +160,88 @@ describe('Client', () => {
     })
   })
 
+  describe('currentSpace', () => {
+    it('should return undefined or space', async () => {
+      const alice = new Client(await AgentData.create())
+
+      const s0 = alice.currentSpace()
+      assert(s0 == null)
+
+      const { did } = await alice.createSpace()
+      await alice.setCurrentSpace(did)
+
+      const s1 = alice.currentSpace()
+      assert(s1)
+      assert.equal(s1.did(), did)
+    })
+  })
+
   describe('spaces', () => {
     it('should get agent spaces', async () => {
-      const data = await AgentData.create()
-      const client = new Client(data)
+      const alice = new Client(await AgentData.create())
 
       const name = `space-${Date.now()}`
-      const { did } = await client.createSpace(name)
+      const { did } = await alice.createSpace(name)
 
-      const spaces = client.spaces()
+      const spaces = alice.spaces()
       assert.equal(spaces.length, 1)
       assert.equal(spaces[0].did(), did)
       assert.equal(spaces[0].name(), name)
+    })
+
+    it('should add space', async () => {
+      const alice = new Client(await AgentData.create())
+      const bob = new Client(await AgentData.create())
+
+      const { did } = await alice.createSpace()
+      await alice.setCurrentSpace(did)
+
+      const delegation = await alice.createDelegation(bob.agent(), ['*'])
+
+      assert.equal(bob.spaces().length, 0)
+      await bob.addSpace(delegation)
+      assert.equal(bob.spaces().length, 1)
+      
+      const spaces = bob.spaces()
+      assert.equal(spaces.length, 1)
+      assert.equal(spaces[0].did(), did)
+    })
+  })
+
+  describe('proofs', () => {
+    it('should get proofs', async () => {
+      const alice = new Client(await AgentData.create())
+      const bob = new Client(await AgentData.create())
+
+      const { did } = await alice.createSpace()
+      await alice.setCurrentSpace(did)
+
+      const delegation = await alice.createDelegation(bob.agent(), ['*'])
+
+      await bob.addProof(delegation)
+
+      const proofs = await bob.proofs()
+      assert.equal(proofs.length, 1)
+      assert.equal(proofs[0].cid.toString(), delegation.cid.toString())
+    })
+  })
+
+  describe('delegations', () => {
+    it('should get delegations', async () => {
+      const alice = new Client(await AgentData.create())
+      const bob = new Client(await AgentData.create())
+
+      const { did } = await alice.createSpace()
+      await alice.setCurrentSpace(did)
+      const name = `delegation-${Date.now()}`
+      const delegation = await alice.createDelegation(bob.agent(), ['*'], {
+        audienceMeta: { type: 'device', name }
+      })
+
+      const delegations = await alice.delegations()
+      assert.equal(delegations.length, 1)
+      assert.equal(delegations[0].cid.toString(), delegation.cid.toString())
+      assert.equal(delegations[0].meta()?.audience?.name, name)
     })
   })
 })

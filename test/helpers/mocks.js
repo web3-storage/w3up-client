@@ -1,4 +1,7 @@
 import * as Server from '@ucanto/server'
+import { connect } from '@ucanto/client'
+import * as CAR from '@ucanto/transport/car'
+import * as CBOR from '@ucanto/transport/cbor'
 
 const notImplemented = () => {
   throw new Server.Failure('not implemented')
@@ -24,13 +27,9 @@ export function mockService (impl) {
       list: withCallCount(impl.upload?.list ?? notImplemented),
       remove: withCallCount(impl.upload?.remove ?? notImplemented)
     },
-    voucher: {
-      claim: withCallCount(impl.voucher?.claim ?? notImplemented),
-      redeem: withCallCount(impl.voucher?.redeem ?? notImplemented)
-    },
     space: {
-      info: withCallCount(impl.account?.info ?? notImplemented),
-      'recover-validation': withCallCount(impl.account?.['recover-validation'] ?? notImplemented)
+      info: withCallCount(impl.space?.info ?? notImplemented),
+      'recover-validation': withCallCount(impl.space?.['recover-validation'] ?? notImplemented)
     }
   }
 }
@@ -49,4 +48,17 @@ function withCallCount (fn) {
   countedFn.called = false
   countedFn.callCount = 0
   return countedFn
+}
+
+/**
+ * @param {import('@ucanto/interface').ServerView} server 
+ */
+export async function mockServiceConf (server) {
+  const connection = connect({
+    id: server.id,
+    encoder: CAR,
+    decoder: CBOR,
+    channel: server,
+  })
+  return { access: connection, upload: connection }
 }
