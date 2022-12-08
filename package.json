@@ -92,9 +92,6 @@
   },
   "homepage": "https://github.com/web3-storage/w3up-client#readme",
   "standard": {
-    "env": {
-      "browser": true,
-      "mocha": true
-    }
+    "env": ["browser", "mocha"]
   }
 }

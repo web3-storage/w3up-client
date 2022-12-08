@@ -51,14 +51,14 @@ function withCallCount (fn) {
 }
 
 /**
- * @param {import('@ucanto/interface').ServerView} server 
+ * @param {import('@ucanto/interface').ServerView} server
  */
 export async function mockServiceConf (server) {
   const connection = connect({
     id: server.id,
     encoder: CAR,
     decoder: CBOR,
-    channel: server,
+    channel: server
   })
   return { access: connection, upload: connection }
 }

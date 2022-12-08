@@ -33,7 +33,7 @@ describe('Client', () => {
             return {
               status: 'upload',
               headers: { 'x-test': 'true' },
-              url: 'http://localhost:9200',
+              url: 'http://localhost:9200'
             }
           })
         },
@@ -48,7 +48,7 @@ describe('Client', () => {
             assert.equal(String(invCap.nb?.shards?.[0]), carCID?.toString())
             return {
               root: expectedCar.roots[0],
-              shards: [expectedCar.cid],
+              shards: [expectedCar.cid]
             }
           })
         }
@@ -58,7 +58,7 @@ describe('Client', () => {
         id: await Signer.generate(),
         service,
         decoder: CAR,
-        encoder: CBOR,
+        encoder: CBOR
       })
 
       const alice = new Client(
@@ -96,7 +96,7 @@ describe('Client', () => {
     it('should upload a directory to the service', async () => {
       const files = [
         new File([await randomBytes(128)], '1.txt'),
-        new File([await randomBytes(32)], '2.txt'),
+        new File([await randomBytes(32)], '2.txt')
       ]
 
       /** @type {import('@web3-storage/upload-client/types').CARLink|undefined} */
@@ -113,7 +113,7 @@ describe('Client', () => {
             return {
               status: 'upload',
               headers: { 'x-test': 'true' },
-              url: 'http://localhost:9200',
+              url: 'http://localhost:9200'
             }
           })
         },
@@ -135,7 +135,7 @@ describe('Client', () => {
         id: await Signer.generate(),
         service,
         decoder: CAR,
-        encoder: CBOR,
+        encoder: CBOR
       })
 
       const alice = new Client(
@@ -201,7 +201,7 @@ describe('Client', () => {
       assert.equal(bob.spaces().length, 0)
       await bob.addSpace(delegation)
       assert.equal(bob.spaces().length, 1)
-      
+
       const spaces = bob.spaces()
       assert.equal(spaces.length, 1)
       assert.equal(spaces[0].did(), did)

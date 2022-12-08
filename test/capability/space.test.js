@@ -35,7 +35,7 @@ describe('SpaceClient', () => {
         id: await Signer.generate(),
         service,
         decoder: CAR,
-        encoder: CBOR,
+        encoder: CBOR
       })
 
       const alice = new Client(

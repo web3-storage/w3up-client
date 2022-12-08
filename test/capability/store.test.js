@@ -23,7 +23,7 @@ describe('StoreClient', () => {
             return {
               status: 'upload',
               headers: { 'x-test': 'true' },
-              url: 'http://localhost:9200',
+              url: 'http://localhost:9200'
             }
           })
         }
@@ -33,7 +33,7 @@ describe('StoreClient', () => {
         id: await Signer.generate(),
         service,
         decoder: CAR,
-        encoder: CBOR,
+        encoder: CBOR
       })
 
       const alice = new Client(
@@ -63,9 +63,9 @@ describe('StoreClient', () => {
         results: [
           {
             link: (await randomCAR(128)).cid,
-            size: 123,
-          },
-        ],
+            size: 123
+          }
+        ]
       }
 
       const service = mockService({
@@ -85,7 +85,7 @@ describe('StoreClient', () => {
         id: await Signer.generate(),
         service,
         decoder: CAR,
-        encoder: CBOR,
+        encoder: CBOR
       })
 
       const alice = new Client(
@@ -125,7 +125,7 @@ describe('StoreClient', () => {
         id: await Signer.generate(),
         service,
         decoder: CAR,
-        encoder: CBOR,
+        encoder: CBOR
       })
 
       const alice = new Client(

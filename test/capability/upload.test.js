@@ -16,7 +16,7 @@ describe('StoreClient', () => {
 
       const res = {
         root: car.roots[0],
-        shards: [car.cid],
+        shards: [car.cid]
       }
 
       const service = mockService({
@@ -39,7 +39,7 @@ describe('StoreClient', () => {
         id: await Signer.generate(),
         service,
         decoder: CAR,
-        encoder: CBOR,
+        encoder: CBOR
       })
 
       const alice = new Client(
@@ -67,9 +67,9 @@ describe('StoreClient', () => {
         results: [
           {
             root: car.roots[0],
-            shards: [car.cid],
-          },
-        ],
+            shards: [car.cid]
+          }
+        ]
       }
 
       const service = mockService({
@@ -89,7 +89,7 @@ describe('StoreClient', () => {
         id: await Signer.generate(),
         service,
         decoder: CAR,
-        encoder: CBOR,
+        encoder: CBOR
       })
 
       const alice = new Client(
@@ -129,7 +129,7 @@ describe('StoreClient', () => {
         id: await Signer.generate(),
         service,
         decoder: CAR,
-        encoder: CBOR,
+        encoder: CBOR
       })
 
       const alice = new Client(
