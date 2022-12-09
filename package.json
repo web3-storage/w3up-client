@@ -25,8 +25,8 @@
   "exports": {
     ".": {
       "types": "./dist/src/index.d.ts",
-      "import": "./src/index.js",
-      "node": "./src/index.node.js"
+      "node": "./src/index.node.js",
+      "import": "./src/index.js"
     },
     "./client": {
       "types": "./dist/src/client.d.ts",
