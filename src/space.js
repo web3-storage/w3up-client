@@ -1,11 +1,11 @@
 export class Space {
-  /** @type {import('@ucanto/interface').DID} */
+  /** @type {import('./types').DID} */
   #did
   /** @type {Record<string, any>} */
   #meta
 
   /**
-   * @param {import('@ucanto/interface').DID} did
+   * @param {import('./types').DID} did
    * @param {Record<string, any>} meta
    */
   constructor (did, meta = {}) {

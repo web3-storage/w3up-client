@@ -11,7 +11,7 @@ export class Client extends Base {
   /**
    * @param {import('@web3-storage/access').AgentData} agentData
    * @param {object} [options]
-   * @param {import('./service.js').ServiceConf} [options.serviceConf]
+   * @param {import('./types').ServiceConf} [options.serviceConf]
    */
   constructor (agentData, options) {
     super(agentData, options)
@@ -26,8 +26,8 @@ export class Client extends Base {
    * Uploads a file to the service and returns the root data CID for the
    * generated DAG.
    *
-   * @param {import('@web3-storage/upload-client/types').BlobLike} file File data.
-   * @param {import('@web3-storage/upload-client/types').UploadOptions} [options]
+   * @param {import('./types').BlobLike} file File data.
+   * @param {import('./types').UploadOptions} [options]
    */
   async uploadFile (file, options = {}) {
     const conf = await this._invocationConfig([StoreCapabilities.add.can, UploadCapabilities.add.can])
@@ -40,8 +40,8 @@ export class Client extends Base {
    * for the generated DAG. All files are added to a container directory, with
    * paths in file names preserved.
    *
-   * @param {import('@web3-storage/upload-client/types').FileLike[]} files File data.
-   * @param {import('@web3-storage/upload-client/types').UploadOptions} [options]
+   * @param {import('./types').FileLike[]} files File data.
+   * @param {import('./types').UploadOptions} [options]
    */
   async uploadDirectory (files, options = {}) {
     const conf = await this._invocationConfig([StoreCapabilities.add.can, UploadCapabilities.add.can])
@@ -67,7 +67,7 @@ export class Client extends Base {
   /**
    * Use a specific space.
    *
-   * @param {import('@ucanto/interface').DID} did
+   * @param {import('./types').DID} did
    */
   async setCurrentSpace (did) {
     await this._agent.setCurrentSpace(did)
@@ -110,7 +110,7 @@ export class Client extends Base {
   /**
    * Add a space from a received proof.
    *
-   * @param {import('@ucanto/interface').Delegation} proof
+   * @param {import('./types').Delegation} proof
    */
   async addSpace (proof) {
     return await this._agent.importSpaceFromDelegation(proof)
@@ -121,7 +121,7 @@ export class Client extends Base {
    *
    * Proofs are delegations with an _audience_ matching the agent DID.
    *
-   * @param {import('@ucanto/interface').Capability[]} [caps] Capabilities to
+   * @param {import('./types').Capability[]} [caps] Capabilities to
    * filter by. Empty or undefined caps with return all the proofs.
    */
   async proofs (caps) {
@@ -132,7 +132,7 @@ export class Client extends Base {
    * Add a proof to the agent. Proofs are delegations with an _audience_
    * matching the agent DID.
    *
-   * @param {import('@ucanto/interface').Delegation} proof
+   * @param {import('./types').Delegation} proof
    */
   async addProof (proof) {
     return await this._agent.addProof(proof)
@@ -141,11 +141,11 @@ export class Client extends Base {
   /**
    * Get delegations created by the agent for others.
    *
-   * @param {import('@ucanto/interface').Capability[]} [caps] Capabilities to
+   * @param {import('./types').Capability[]} [caps] Capabilities to
    * filter by. Empty or undefined caps with return all the delegations.
    */
   async delegations (caps) {
-    /** @type {import('./delegation').Delegation<import('@ucanto/interface').Capabilities>[]} */
+    /** @type {import('./delegation').Delegation<import('./types').Capabilities>[]} */
     const delegations = []
     for await (const { delegation, meta } of this._agent.delegationsWithMeta(caps)) {
       delegations.push(new Delegation(delegation.root, delegation.blocks, meta))
@@ -157,9 +157,9 @@ export class Client extends Base {
    * Create a delegation to the passed audience for the given abilities with
    * the _current_ space as the resource.
    *
-   * @param {import('@ucanto/interface').Principal} audience
-   * @param {import('@web3-storage/capabilities/types').Abilities[]} abilities
-   * @param {Omit<import('@ucanto/interface').UCANOptions, 'audience'> & { audienceMeta?: import('@web3-storage/access/types').AgentMeta }} [options]
+   * @param {import('./types').Principal} audience
+   * @param {import('./types').Abilities[]} abilities
+   * @param {Omit<import('./types').UCANOptions, 'audience'> & { audienceMeta?: import('./types').AgentMeta }} [options]
    */
   async createDelegation (audience, abilities, options = {}) {
     const audienceMeta = options.audienceMeta ?? { name: 'agent', type: 'device' }

@@ -6,6 +6,22 @@
   "type": "module",
   "main": "src/index.js",
   "types": "dist/src/index.d.ts",
+  "typesVersions": {
+    "*": {
+      "*": [
+        "*",
+        "dist/*",
+        "dist/src/*",
+        "dist/src/*/index"
+      ],
+      "src/*": [
+        "*",
+        "dist/*",
+        "dist/src/*",
+        "dist/src/*/index"
+      ]
+    }
+  },
   "exports": {
     ".": {
       "types": "./dist/src/index.d.ts",
@@ -27,7 +43,8 @@
     "./capability/upload": {
       "types": "./dist/src/capability/upload.d.ts",
       "import": "./src/capability/upload.js"
-    }
+    },
+    "./types": "./src/types.js"
   },
   "publishConfig": {
     "access": "public"
