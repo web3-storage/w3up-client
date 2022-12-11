@@ -114,7 +114,7 @@ export class Client extends Base {
    * @param {import('./types').Delegation} proof
    */
   async addSpace (proof) {
-    return await this._agent.importSpaceFromDelegation(proof)
+    await this._agent.importSpaceFromDelegation(proof)
   }
 
   /**
@@ -136,7 +136,7 @@ export class Client extends Base {
    * @param {import('./types').Delegation} proof
    */
   async addProof (proof) {
-    return await this._agent.addProof(proof)
+    await this._agent.addProof(proof)
   }
 
   /**
