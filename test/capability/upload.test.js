@@ -47,8 +47,8 @@ describe('StoreClient', () => {
         { serviceConf: await mockServiceConf(server) }
       )
 
-      const { did } = await alice.createSpace()
-      await alice.setCurrentSpace(did)
+      const space = await alice.createSpace()
+      await alice.setCurrentSpace(space.did())
 
       await alice.capability.upload.add(car.roots[0], [car.cid])
 
@@ -97,8 +97,8 @@ describe('StoreClient', () => {
         { serviceConf: await mockServiceConf(server) }
       )
 
-      const { did } = await alice.createSpace()
-      await alice.setCurrentSpace(did)
+      const space = await alice.createSpace()
+      await alice.setCurrentSpace(space.did())
 
       const res = await alice.capability.upload.list()
 
@@ -137,8 +137,8 @@ describe('StoreClient', () => {
         { serviceConf: await mockServiceConf(server) }
       )
 
-      const { did } = await alice.createSpace()
-      await alice.setCurrentSpace(did)
+      const space = await alice.createSpace()
+      await alice.setCurrentSpace(space.did())
 
       await alice.capability.upload.remove((await randomCAR(128)).roots[0])
 

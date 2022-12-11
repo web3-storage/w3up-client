@@ -66,8 +66,8 @@ describe('Client', () => {
         { serviceConf: await mockServiceConf(server) }
       )
 
-      const { did } = await alice.createSpace()
-      await alice.setCurrentSpace(did)
+      const space = await alice.createSpace()
+      await alice.setCurrentSpace(space.did())
 
       const dataCID = await alice.uploadFile(file, {
         onShardStored: meta => { carCID = meta.cid }
@@ -143,8 +143,8 @@ describe('Client', () => {
         { serviceConf: await mockServiceConf(server) }
       )
 
-      const { did } = await alice.createSpace()
-      await alice.setCurrentSpace(did)
+      const space = await alice.createSpace()
+      await alice.setCurrentSpace(space.did())
 
       const dataCID = await alice.uploadDirectory(files, {
         onShardStored: meta => { carCID = meta.cid }
@@ -164,15 +164,15 @@ describe('Client', () => {
     it('should return undefined or space', async () => {
       const alice = new Client(await AgentData.create())
 
-      const s0 = alice.currentSpace()
-      assert(s0 == null)
+      const current0 = alice.currentSpace()
+      assert(current0 == null)
 
-      const { did } = await alice.createSpace()
-      await alice.setCurrentSpace(did)
+      const space = await alice.createSpace()
+      await alice.setCurrentSpace(space.did())
 
-      const s1 = alice.currentSpace()
-      assert(s1)
-      assert.equal(s1.did(), did)
+      const current1 = alice.currentSpace()
+      assert(current1)
+      assert.equal(current1.did(), space.did())
     })
   })
 
@@ -181,11 +181,11 @@ describe('Client', () => {
       const alice = new Client(await AgentData.create())
 
       const name = `space-${Date.now()}`
-      const { did } = await alice.createSpace(name)
+      const space = await alice.createSpace(name)
 
       const spaces = alice.spaces()
       assert.equal(spaces.length, 1)
-      assert.equal(spaces[0].did(), did)
+      assert.equal(spaces[0].did(), space.did())
       assert.equal(spaces[0].name(), name)
     })
 
@@ -193,8 +193,8 @@ describe('Client', () => {
       const alice = new Client(await AgentData.create())
       const bob = new Client(await AgentData.create())
 
-      const { did } = await alice.createSpace()
-      await alice.setCurrentSpace(did)
+      const space = await alice.createSpace()
+      await alice.setCurrentSpace(space.did())
 
       const delegation = await alice.createDelegation(bob.agent(), ['*'])
 
@@ -204,7 +204,7 @@ describe('Client', () => {
 
       const spaces = bob.spaces()
       assert.equal(spaces.length, 1)
-      assert.equal(spaces[0].did(), did)
+      assert.equal(spaces[0].did(), space.did())
     })
   })
 
@@ -213,8 +213,8 @@ describe('Client', () => {
       const alice = new Client(await AgentData.create())
       const bob = new Client(await AgentData.create())
 
-      const { did } = await alice.createSpace()
-      await alice.setCurrentSpace(did)
+      const space = await alice.createSpace()
+      await alice.setCurrentSpace(space.did())
 
       const delegation = await alice.createDelegation(bob.agent(), ['*'])
 
@@ -231,8 +231,8 @@ describe('Client', () => {
       const alice = new Client(await AgentData.create())
       const bob = new Client(await AgentData.create())
 
-      const { did } = await alice.createSpace()
-      await alice.setCurrentSpace(did)
+      const space = await alice.createSpace()
+      await alice.setCurrentSpace(space.did())
       const name = `delegation-${Date.now()}`
       const delegation = await alice.createDelegation(bob.agent(), ['*'], {
         audienceMeta: { type: 'device', name }

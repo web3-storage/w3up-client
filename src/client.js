@@ -86,7 +86,8 @@ export class Client extends Base {
    * @param {string} [name]
    */
   async createSpace (name) {
-    return await this._agent.createSpace(name)
+    const { did, meta } = await this._agent.createSpace(name)
+    return new Space(did, meta)
   }
 
   /**

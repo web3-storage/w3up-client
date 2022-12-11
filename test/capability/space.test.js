@@ -18,9 +18,9 @@ describe('SpaceClient', () => {
             assert.equal(invocation.capabilities.length, 1)
             const invCap = invocation.capabilities[0]
             assert.equal(invCap.can, SpaceCapabilities.info.can)
-            assert.equal(invCap.with, did)
+            assert.equal(invCap.with, space.did())
             return {
-              did,
+              did: space.did(),
               agent: alice.agent().did(),
               email: 'mailto:alice@example.com',
               product: 'product:test',
@@ -43,15 +43,15 @@ describe('SpaceClient', () => {
         { serviceConf: await mockServiceConf(server) }
       )
 
-      const { did } = await alice.createSpace()
-      await alice.setCurrentSpace(did)
+      const space = await alice.createSpace()
+      await alice.setCurrentSpace(space.did())
 
-      const info = await alice.capability.space.info(did)
+      const info = await alice.capability.space.info(space.did())
 
       assert(service.space.info.called)
       assert.equal(service.space.info.callCount, 1)
 
-      assert.equal(info.did, did)
+      assert.equal(info.did, space.did())
       assert.equal(info.agent, alice.agent().did())
       assert.equal(info.email, 'mailto:alice@example.com')
       assert.equal(info.product, 'product:test')
