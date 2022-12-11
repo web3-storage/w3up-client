@@ -114,7 +114,8 @@ export class Client extends Base {
    * @param {import('./types').Delegation} proof
    */
   async addSpace (proof) {
-    await this._agent.importSpaceFromDelegation(proof)
+    const { did, meta } = await this._agent.importSpaceFromDelegation(proof)
+    return new Space(did, meta)
   }
 
   /**
