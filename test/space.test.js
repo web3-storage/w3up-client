@@ -3,12 +3,6 @@ import assert from 'assert'
 import { Space } from '../src/space.js'
 
 describe('spaces', () => {
-  it('should return DID when no name', async () => {
-    const signer = await Signer.generate()
-    const space = new Space(signer.did())
-    assert.equal(space.name(), signer.did())
-  })
-
   it('should get meta', async () => {
     const signer = await Signer.generate()
     const name = `space-${Date.now()}`

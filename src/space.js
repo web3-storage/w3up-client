@@ -14,10 +14,10 @@ export class Space {
   }
 
   /**
-   * The given space name, or the space DID if not set.
+   * The given space name.
    */
   name () {
-    return this.#meta.name ? String(this.#meta.name) : this.#did
+    return this.#meta.name
   }
 
   /**
