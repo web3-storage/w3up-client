@@ -4,7 +4,7 @@
 
 `@web3-storage/w3up-client` is a JavaScript libary that provides a convenient interface to the w3up platform, a simple "on-ramp" to the content-addressed decentralized IPFS network.
 
-This library is the user-facing "porcelain" client for interacting with w3up services from JavaScript. It wraps the lower-level [`@web3-storage/access-client`][access-client-github] and [`@web3-storage/upload-client`][upload-client-github], which target individual w3up services. We recommend using `w3up-client` instead of using those "plumbing" packages directly, but you may find them useful if you need more context on w3up's architecture and internals.
+This library is the user-facing "porcelain" client for interacting with w3up services from JavaScript. It wraps the lower-level [`@web3-storage/access`][access-client-github] and [`@web3-storage/upload-client`][upload-client-github] client packages, which target individual w3up services. We recommend using `w3up-client` instead of using those "plumbing" packages directly, but you may find them useful if you need more context on w3up's architecture and internals.
 
 <!-- TODO: bring this link back once w3up-client-examples have been updated: 
 Visit [w3up-client-examples](https://github.com/web3-storage/w3up-client-examples/tree/main/nodejs/simple-upload) for examples on how to use w3up-client in practice.
@@ -114,6 +114,8 @@ In the example above, `directoryCid` resolves to an IPFS directory with the foll
 
 
 [w3up-cli-github]: https://github.com/web3-storage/w3up-cli
+[access-client-github]: https://github.com/web3-storage/w3protocol/tree/main/packages/access-client
+[upload-client-github]: https://github.com/web3-storage/w3protocol/tree/main/packages/upload-client
 [elastic-ipfs]: https://github.com/elastic-ipfs/elastic-ipfs
 [ucanto]: https://github.com/web3-storage/ucanto
 [car-spec]: https://ipld.io/specs/transport/car/
