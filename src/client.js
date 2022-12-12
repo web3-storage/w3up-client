@@ -147,7 +147,7 @@ export class Client extends Base {
    * filter by. Empty or undefined caps with return all the delegations.
    */
   async delegations (caps) {
-    /** @type {import('./delegation').Delegation<import('./types').Capabilities>[]} */
+    /** @type {Delegation<import('./types').Capabilities>[]} */
     const delegations = []
     for await (const { delegation, meta } of this._agent.delegationsWithMeta(caps)) {
       delegations.push(new Delegation(delegation.root, delegation.blocks, meta))
