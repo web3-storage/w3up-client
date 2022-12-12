@@ -2,7 +2,9 @@
 
 > A client SDK for the w3up service, providing content addressed storage for any application.
 
-`w3up-client` is a JavaScript libary that provides a convenient interface to the w3up platform, a simple "on-ramp" to the content-addressed decentralized IPFS network.
+`@web3-storage/w3up-client` is a JavaScript libary that provides a convenient interface to the w3up platform, a simple "on-ramp" to the content-addressed decentralized IPFS network.
+
+This library is the user-facing "porcelain" client for interacting with w3up services from JavaScript. It wraps the lower-level [`@web3-storage/access-client`][access-client-github] and [`@web3-storage/upload-client`][upload-client-github], which target individual w3up services. We recommend using `w3up-client` instead of using those "plumbing" packages directly, but you may find them useful if you need more context on w3up's architecture and internals.
 
 <!-- TODO: bring this link back once w3up-client-examples have been updated: 
 Visit [w3up-client-examples](https://github.com/web3-storage/w3up-client-examples/tree/main/nodejs/simple-upload) for examples on how to use w3up-client in practice.
@@ -45,7 +47,7 @@ Agents are entities that control the private signing keys used to interact with 
 
 ### Creating and registering Spaces
 
-Before you can upload data, you'll need to create a `Space` and register it with the service.
+Before you can upload data, you'll need to create a [`Space`][docs-Space] and register it with the service.
 
 A Space acts as a namespace for your uploads. Spaces are created using the [`createSpace` client method][docs-client#createSpace]:
 
@@ -60,7 +62,7 @@ After creating a `Space`, you'll need to register it with the w3up service befor
 First, set the space as your "current" space using the [`setCurrentSpace` method][docs-Client#setCurrentSpace], passing in the `did` field of the `space` object you created above:
 
 ```js
-await client.setCurrentSpace(space.did)
+await client.setCurrentSpace(space.did())
 ```
 
 Next, call the [`registerSpace` method][docs-Client#registerSpace], passing in an email address to register as the primary contact for the space:
@@ -124,7 +126,8 @@ In the example above, `directoryCid` resolves to an IPFS directory with the foll
 [docs-Client#setCurrentSpace]: https://web3-storage.github.io/w3up-client/classes/client.Client.html#setCurrentSpace
 [docs-Client#registerSpace]: https://web3-storage.github.io/w3up-client/classes/client.Client.html#registerSpace
 [docs-Client#uploadFile]: https://web3-storage.github.io/w3up-client/classes/client.Client.html#uploadFile
-[docs-Client#uploadDirectory]: https://web3-storage.github.io/w3up-client/classes/client.Client.html#uploadDirectory
+[docs-Client#uploadDirectory]: https://web3-storage.github.io/w3up-client/classes/client.Client.html#uploadDirectory 
+[docs-Space]: https://web3-storage.github.io/w3up-client/classes/space.Space.html
 
 [docs-create]: https://web3-storage.github.io/w3up-client/functions/index.create.html
 [docs-ClientFactoryOptions]: https://web3-storage.github.io/w3up-client/interfaces/types.ClientFactoryOptions.html
