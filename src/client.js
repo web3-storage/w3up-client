@@ -2,7 +2,7 @@ import { uploadFile, uploadDirectory } from '@web3-storage/upload-client'
 import { Store as StoreCapabilities, Upload as UploadCapabilities } from '@web3-storage/capabilities'
 import { Base } from './base.js'
 import { Space } from './space.js'
-import { Delegation } from './delegation.js'
+import { Delegation as AgentDelegation } from './delegation.js'
 import { StoreClient } from './capability/store.js'
 import { UploadClient } from './capability/upload.js'
 import { SpaceClient } from './capability/space.js'
@@ -147,10 +147,9 @@ export class Client extends Base {
    * filter by. Empty or undefined caps with return all the delegations.
    */
   async delegations (caps) {
-    /** @type {Delegation<import('./types').Capabilities>[]} */
     const delegations = []
     for await (const { delegation, meta } of this._agent.delegationsWithMeta(caps)) {
-      delegations.push(new Delegation(delegation.root, delegation.blocks, meta))
+      delegations.push(new AgentDelegation(delegation.root, delegation.blocks, meta))
     }
     return delegations
   }
@@ -171,6 +170,6 @@ export class Client extends Base {
       audience,
       audienceMeta
     })
-    return new Delegation(root, blocks, { audience: audienceMeta })
+    return new AgentDelegation(root, blocks, { audience: audienceMeta })
   }
 }
