@@ -10,7 +10,13 @@ export interface ServiceConf {
 }
 
 export interface ClientFactoryOptions {
+  /**
+   * A storage driver that persists exported agent data.
+   */
   store?: Driver<AgentDataExport>
+  /**
+   * Service DID and URL configuration.
+   */
   serviceConf?: ServiceConf
 }
 

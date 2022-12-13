@@ -1,5 +1,4 @@
 /**
- *
  * The main entry point for the `@web3-storage/w3up-client` package.
  *
  * Use the static {@link create} function to create a new {@link Client} object.

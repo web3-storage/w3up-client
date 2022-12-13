@@ -30,6 +30,7 @@ export class Base {
   }
 
   /**
+   * @protected
    * @param {import('./types').Ability[]} abilities
    */
   async _invocationConfig (abilities) {

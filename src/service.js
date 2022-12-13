@@ -2,8 +2,8 @@ import { connect } from '@ucanto/client'
 import { CAR, CBOR, HTTP } from '@ucanto/transport'
 import * as DID from '@ipld/dag-ucan/did'
 
-export const accessServiceURL = new URL('https://w3access-staging.protocol-labs.workers.dev')
-export const accessServicePrincipal = DID.parse('did:key:z6MkwTYX2JHHd8bmaEuDdS1LJjrpFspirjDcQ4DvAiDP49Gm')
+export const accessServiceURL = new URL('https://access.web3.storage')
+export const accessServicePrincipal = DID.parse('did:web:staging.web3.storage')
 
 export const accessServiceConnection = connect({
   id: accessServicePrincipal,
@@ -15,8 +15,8 @@ export const accessServiceConnection = connect({
   })
 })
 
-export const uploadServiceURL = new URL('https://staging.up.web3.storage')
-export const uploadServicePrincipal = DID.parse('did:key:z6MkhcbEpJpEvNVDd3n5RurquVdqs5dPU16JDU5VZTDtFgnn')
+export const uploadServiceURL = new URL('https://up.web3.storage')
+export const uploadServicePrincipal = DID.parse('did:web:web3.storage')
 
 export const uploadServiceConnection = connect({
   id: uploadServicePrincipal,
