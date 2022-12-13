@@ -147,7 +147,7 @@ In the example above, `directoryCid` resolves to an IPFS directory with the foll
 ## API
 
 - [`create`](#create)
-- [`Client`]
+- `Client`
   - [`uploadDirectory`](#uploaddirectory)
   - [`uploadFile`](#uploadfile)
   - [`agent`](#agent)
