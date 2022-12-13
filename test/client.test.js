@@ -220,7 +220,7 @@ describe('Client', () => {
 
       await bob.addProof(delegation)
 
-      const proofs = await bob.proofs()
+      const proofs = bob.proofs()
       assert.equal(proofs.length, 1)
       assert.equal(proofs[0].cid.toString(), delegation.cid.toString())
     })
@@ -238,7 +238,7 @@ describe('Client', () => {
         audienceMeta: { type: 'device', name }
       })
 
-      const delegations = await alice.delegations()
+      const delegations = alice.delegations()
       assert.equal(delegations.length, 1)
       assert.equal(delegations[0].cid.toString(), delegation.cid.toString())
       assert.equal(delegations[0].meta()?.audience?.name, name)
