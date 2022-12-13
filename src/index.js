@@ -1,3 +1,11 @@
+/**
+ * 
+ * The main entry point for the `@web3-storage/w3up-client` package.
+ * 
+ * Use the static {@link create} function to create a new {@link Client} object.
+ * 
+ * @module 
+ */
 import { AgentData } from '@web3-storage/access/agent'
 import { StoreIndexedDB } from '@web3-storage/access/stores/store-indexeddb'
 import { generate } from '@ucanto/principal/rsa'

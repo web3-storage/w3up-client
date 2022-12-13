@@ -34,5 +34,16 @@
     "resolveJsonModule": true
   },
   "include": ["src"],
-  "exclude": ["**/node_modules/**"]
+  "exclude": ["**/node_modules/**"],
+  "typedocOptions": {
+    "entryPoints": [
+      "./src"
+    ],
+    "entryPointStrategy": "expand",
+    "darkHighlightTheme": "github-dark",
+    "navigationLinks": {
+      "Github": "https://github.com/web3-storage/w3up-client"
+    },
+    "customCss": "./static/docs.css",
+  }
 }
