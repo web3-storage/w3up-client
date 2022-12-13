@@ -126,8 +126,8 @@ export class Client extends Base {
    * @param {import('./types').Capability[]} [caps] Capabilities to
    * filter by. Empty or undefined caps with return all the proofs.
    */
-  async proofs (caps) {
-    return await this._agent.proofs(caps)
+  proofs (caps) {
+    return this._agent.proofs(caps)
   }
 
   /**
@@ -146,9 +146,9 @@ export class Client extends Base {
    * @param {import('./types').Capability[]} [caps] Capabilities to
    * filter by. Empty or undefined caps with return all the delegations.
    */
-  async delegations (caps) {
+  delegations (caps) {
     const delegations = []
-    for await (const { delegation, meta } of this._agent.delegationsWithMeta(caps)) {
+    for (const { delegation, meta } of this._agent.delegationsWithMeta(caps)) {
       delegations.push(new AgentDelegation(delegation.root, delegation.blocks, meta))
     }
     return delegations
