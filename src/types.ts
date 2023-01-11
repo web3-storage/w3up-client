@@ -1,7 +1,7 @@
 import { Driver } from '@web3-storage/access/drivers/types'
 import { Service as AccessService, AgentDataExport } from '@web3-storage/access/types'
 import { Service as UploadService } from '@web3-storage/upload-client/types'
-import { ConnectionView } from '@ucanto/interface'
+import { ConnectionView, Signer } from '@ucanto/interface'
 import { Client } from './client'
 
 export interface ServiceConf {
@@ -18,6 +18,12 @@ export interface ClientFactoryOptions {
    * Service DID and URL configuration.
    */
   serviceConf?: ServiceConf
+  /**
+   * Use this principal to sign UCANs. Note: if the store is non-empty and the
+   * principal saved in the store is not the same principal as the one passed
+   * here an error will be thrown.
+   */
+  principal?: Signer
 }
 
 export interface ClientFactory {
