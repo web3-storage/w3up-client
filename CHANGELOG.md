@@ -1,5 +1,13 @@
 # Changelog
 
+## [4.2.1](https://github.com/web3-storage/w3up-client/compare/v4.2.0...v4.2.1) (2023-02-15)
+
+
+### Bug Fixes
+
+* typos ([52c648a](https://github.com/web3-storage/w3up-client/commit/52c648a525466e1d6e0619ed4ab663164a9b6a9d))
+* typos ([52c648a](https://github.com/web3-storage/w3up-client/commit/52c648a525466e1d6e0619ed4ab663164a9b6a9d))
+
 ## [4.2.0](https://github.com/web3-storage/w3up-client/compare/v4.1.0...v4.2.0) (2023-02-15)
 
 
