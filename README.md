@@ -76,7 +76,7 @@ import { create } from '@web3-storage/w3up-client'
 const client = await create()
 ```
 
-By default, clients will be configured to use the production w3up service endpoints, and the client will create a new [`Agent`][access-docs-Agent] with a persistent `Store` if it can't find one locally to load.
+By default, clients will be configured to use service endpoints to store with production web3.storage and NFT.Storage (these share the same endpoints today), and the client will create a new [`Agent`][access-docs-Agent] with a persistent `Store` if it can't find one locally to load.
 
 Agents are entities that control the private signing keys used to interact with the w3up service layer. You can access the client's `Agent` with the [`agent()` accessor method][docs-Client#agent]. 
 
@@ -114,7 +114,7 @@ try {
 
 Calling `registerSpace` will cause an email to be sent to the given address. Once a user clicks the confirmation link in the email, the `registerSpace` method will resolve. Make sure to check for errors, as `registerSpace` will fail if the email is not confirmed within the expiration timeout.
 
-Registering a space enrolls it in web3.storage's free usage tier, allowing you to store files, list uploads, etc.
+Registering a space enrolls it in web3.storage or NFT.Storage (_fill in additional details later_), allowing you to store files, list uploads, etc.
 
 #### Uploading data
 
