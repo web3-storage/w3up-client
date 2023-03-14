@@ -174,6 +174,8 @@ In this option, you (the developer) own your Space, but delegate permissions to 
 
 - _To-do: Include instructions_
 
+If you explore this option, contributions are welcome to these docs to help others in the future (and to reveal feature requests and bugs that we can patch to improve this implementation path)! Also feel free to chime into the discussion here. (_to-do: add link to github discussion on topic_)
+
 #### User-owned
 
 In this option, your user owns their own Space. This option is the most web3-native and probably the most interesting one. It comes with a world of possibilities; for instance, instead of generating  a new Space keypair for your user, you might look into using the existing keypair from their Metamask wallet or Apple Passkey. However, there are also likely edge cases that will appear early on for developers developing these types of apps that we haven’t (e.g., user flows when a user already has a w3up account with one app and is ).
@@ -181,7 +183,7 @@ In this option, your user owns their own Space. This option is the most web3-nat
 We haven’t had a chance to explore this option enough to firmly suggest how to best get started with this implementation type, but at a high level, we’d recommend:
 - _To-do: Include instructions_
 
-If you explore this option, contributions are welcome to these docs to help others in the future (and to reveal feature requests and bugs that we can patch to improve this implementation path)!
+If you explore this option, contributions are welcome to these docs to help others in the future (and to reveal feature requests and bugs that we can patch to improve this implementation path)! Also feel free to chime into the discussion here. (_to-do: add link to github discussion on topic_)
 
 ## API
 
