@@ -110,6 +110,8 @@ const space = await client.createSpace('my-awesome-space')
 
 The name parameter is optional. If provided, it will be stored in your client's local state store and can be used to provide a friendly name for user interfaces.
 
+After creating a `Space`, you'll need to register it with the w3up service before you can upload data.
+
 First, set the space as your "current" space using the [`setCurrentSpace` method][docs-Client#setCurrentSpace], passing in the DID of the `space` object you created above:
 
 ```js
