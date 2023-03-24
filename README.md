@@ -134,7 +134,15 @@ try {
 
 Calling `registerSpace` will cause an email to be sent to the given address. Once a user clicks the confirmation link in the email, the `registerSpace` method will resolve. Make sure to check for errors, as `registerSpace` will fail if the email is not confirmed within the expiration timeout.
 
-Registering a space enrolls it in web3.storage's free usage tier, allowing you to store files, list uploads, etc.
+By default, calling `registerSpace` registers the Space with web3.storage w3up. You can pass the optional `provider` param to register with NFT.Storage w3up instead.
+
+```js
+try {
+  await client.registerSpace('zaphod@beeblebrox.galaxy', provider = 'did:web:nft.storage')
+} catch (err) {
+  console.error('registration failed: ', err)
+}
+```
 
 #### Uploading data
 
@@ -348,13 +356,16 @@ Create a new space with an optional name.
 ```ts
 async function registerSpace (
   email: string,
+  provider?: string,
   options?: { signal?: AbortSignal }
 ): Promise<Space>
 ```
 
 Register the _current_ space with the service.
 
-Invokes `voucher/redeem` for the free tier, waits on the websocket for the `voucher/claim` and invokes it.
+By default, the provider is set to web3.storage w3up, but you can register instead of NFT.Storage w3up by setting `provider` to `did:web:nft.storage`.
+
+Invokes `voucher/redeem`, waits on the websocket for the `voucher/claim` and invokes it.
 
 It also adds a full space delegation to the service in the `voucher/claim` invocation to allow for recovery.
 
