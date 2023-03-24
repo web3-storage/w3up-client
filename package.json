@@ -1,6 +1,6 @@
 {
   "name": "@web3-storage/w3up-client",
-  "version": "4.2.0",
+  "version": "5.0.0",
   "description": "Client for the w3up API",
   "license": "Apache-2.0 OR MIT",
   "type": "module",
@@ -31,6 +31,10 @@
     "./client": {
       "types": "./dist/src/client.d.ts",
       "import": "./src/client.js"
+    },
+    "./capability/access": {
+      "types": "./dist/src/capability/access.d.ts",
+      "import": "./src/capability/access.js"
     },
     "./capability/space": {
       "types": "./dist/src/capability/space.d.ts",
@@ -69,18 +73,18 @@
   },
   "dependencies": {
     "@ipld/dag-ucan": "^3.0.1",
-    "@ucanto/client": "^4.0.2",
-    "@ucanto/core": "^4.0.2",
-    "@ucanto/interface": "^4.0.2",
-    "@ucanto/principal": "^4.0.2",
-    "@ucanto/transport": "^4.0.2",
-    "@web3-storage/access": "^9.1.1",
-    "@web3-storage/capabilities": "^2.0.0",
-    "@web3-storage/upload-client": "^5.3.0"
+    "@ucanto/client": "^5.1.0",
+    "@ucanto/core": "^5.1.0",
+    "@ucanto/interface": "^6.0.0",
+    "@ucanto/principal": "^5.1.0",
+    "@ucanto/transport": "^5.1.0",
+    "@web3-storage/access": "^11.0.0",
+    "@web3-storage/capabilities": "^4.0.0",
+    "@web3-storage/upload-client": "^8.0.0"
   },
   "devDependencies": {
     "@docusaurus/core": "^2.2.0",
-    "@ucanto/server": "^4.0.2",
+    "@ucanto/server": "^6.1.0",
     "assert": "^2.0.0",
     "docusaurus-plugin-typedoc": "^0.18.0",
     "hundreds": "^0.0.9",

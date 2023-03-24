@@ -6,6 +6,7 @@ import { Delegation as AgentDelegation } from './delegation.js'
 import { StoreClient } from './capability/store.js'
 import { UploadClient } from './capability/upload.js'
 import { SpaceClient } from './capability/space.js'
+import { AccessClient } from './capability/access.js'
 
 export class Client extends Base {
   /**
@@ -16,11 +17,26 @@ export class Client extends Base {
   constructor (agentData, options) {
     super(agentData, options)
     this.capability = {
+      access: new AccessClient(agentData, options),
       store: new StoreClient(agentData, options),
       upload: new UploadClient(agentData, options),
       space: new SpaceClient(agentData, options)
     }
   }
+
+  /* c8 ignore start - testing websockets is hard */
+  /**
+   * Authorize the current agent to use capabilities granted to the passed
+   * email account.
+   *
+   * @param {`${string}@${string}`} email
+   * @param {object} [options]
+   * @param {AbortSignal} [options.signal]
+   */
+  async authorize (email, options) {
+    await this.capability.access.authorize(email, options)
+  }
+  /* c8 ignore stop */
 
   /**
    * Uploads a file to the service and returns the root data CID for the
@@ -68,6 +84,13 @@ export class Client extends Base {
   }
 
   /**
+   * Return the default provider.
+   */
+  defaultProvider () {
+    return this._agent.connection.id.did()
+  }
+
+  /**
    * The current user agent (this device).
    */
   agent () {
@@ -85,7 +108,7 @@ export class Client extends Base {
   /**
    * Use a specific space.
    *
-   * @param {import('./types').DID} did
+   * @param {import('./types').DID<'key'>} did
    */
   async setCurrentSpace (did) {
     await this._agent.setCurrentSpace(did)
@@ -108,23 +131,20 @@ export class Client extends Base {
     return new Space(did, meta)
   }
 
+  /* c8 ignore start - hard to test this without authorize tests which require websockets */
   /**
    * Register the _current_ space with the service.
    *
-   * Invokes `voucher/redeem` for the free tier, waits on the websocket for the
-   * `voucher/claim` and invokes it.
-   *
-   * It also adds a full space delegation to the service in the `voucher/claim`
-   * invocation to allow for recovery.
-   *
    * @param {string} email
    * @param {object} [options]
+   * @param {import('./types').DID<'web'>} [options.provider]
    * @param {AbortSignal} [options.signal]
    */
-  /* c8 ignore next 3 */
-  async registerSpace (email, options) {
+  async registerSpace (email, options = {}) {
+    options.provider = options.provider ?? /** @type {import('./types').DID<'web'>} */(this.defaultProvider())
     await this._agent.registerSpace(email, options)
   }
+  /* c8 ignore stop */
 
   /**
    * Add a space from a received proof.
