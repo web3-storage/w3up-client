@@ -19,6 +19,10 @@ questions!
 
 This library is the user-facing "porcelain" client for interacting with w3up services from JavaScript. It wraps the lower-level [`@web3-storage/access`][access-client-github] and [`@web3-storage/upload-client`][upload-client-github] client packages, which target individual w3up services. We recommend using `w3up-client` instead of using those "plumbing" packages directly, but you may find them useful if you need more context on w3up's architecture and internals.
 
+> ⚠️❗ __Public Data__ 🌎: All data uploaded to w3up is available to anyone who requests it using the correct CID. Do not store any private or sensitive information in an unencrypted form using w3up.
+
+> ⚠️❗ __Permanent Data__ ♾️: Removing files from w3up will remove them from the file listing for your account, but that doesn’t prevent nodes on the decentralized storage network from retaining copies of the data indefinitely. Do not use w3up for data that may need to be permanently deleted in the future.
+
 - [Install](#install)
 - [Usage](#usage)
   - [Core concepts](#core-concepts)
@@ -26,7 +30,7 @@ This library is the user-facing "porcelain" client for interacting with w3up ser
     - [Creating a client object](#creating-a-client-object)
     - [Creating and registering Spaces](#creating-and-registering-spaces)
     - [Uploading data](#uploading-data)
-  - [Alternate implementation options](#alternate-implementation-options)
+  - [Alternate implementation options](#alternate-implementation-options) - _Coming soon!_
 - [API](#api)
 - [Contributing](#contributing)
 - [License](#license)
@@ -75,11 +79,11 @@ Currently, `w3up-client` offers as defaults two beta services to register Spaces
 
 However, `w3up-client` can be used for any service that complies to the w3up [specs](https://github.com/web3-storage/specs) and [protocol](https://github.com/web3-storage/w3protocol/).
 
-> By you or your users registering a w3up beta Space via email confirmation with either [NFT.Storage](http://NFT.Storage) or [web3.storage](http://web3.storage), you agree to the relevant w3up beta Terms of Service ([web3.storage](https://console.web3.storage/terms) [NFT.Storage](https://console.nft.storage/terms)). If you have an existing non-w3up beta account with NFT.Storage or web3.storage and register for the w3up beta version of the same product (NFT.Storage or web3.storage) using the same email, then at the end of the beta period, these accounts will be combined. Until the beta period is over and this migration occurs, uploads to w3up will not appear in your NFT.Storage or web3.storage account (and vice versa), even if you register with the same email.
+> By you or your users registering a w3up beta Space via email confirmation with either [NFT.Storage](http://NFT.Storage) or [web3.storage](http://web3.storage), you agree to the relevant w3up beta Terms of Service ([web3.storage](https://console.web3.storage/terms), [NFT.Storage](https://console.nft.storage/terms)). If you have an existing non-w3up beta account with NFT.Storage or web3.storage and register for the w3up beta version of the same product (NFT.Storage or web3.storage) using the same email, then at the end of the beta period, these accounts will be combined. Until the beta period is over and this migration occurs, uploads to w3up will not appear in your NFT.Storage or web3.storage account (and vice versa), even if you register with the same email (_coming soon!_).
 
 In terms of whether you or your user should register the Space (and more broadly how to integrate `w3up-client`), there are three general wasy to integrate.
 - (Simplest) Client-server: You (the developer) own the Space and register it with the service of your choosing, and your user uploads to your backend infra before you upload it to the service
-- (More complex) [Direct upload from client](#direct-upload-from-client): You own the Space and register it with the service of your choosing, but you give a delegated UCAN token to your user to upload directly to the service
+- (More complex) [Server-owned space with direct upload from end-user](#server-owned-space-with-direct-upload-from-end-user): You own the Space and register it with the service of your choosing, but you give a delegated UCAN token to your user to upload directly to the service
 - (Most complex) [User-owned](#user-owned): Your user owns the Space and registers it (likely with the service you choose for them in your code, but not necessarily), and they use it to upload directly with the service (if you want to instrument visibility into what they’re uploading, you’ll have to write separate code in your app for it)
 
 The first and simplest of these options (client-server) is covered in-depth in this section, though the other two options are discussed further down in the README as well.
@@ -168,22 +172,21 @@ In the example above, `directoryCid` resolves to an IPFS directory with the foll
 
 As discussed above, there are options outside the traditional client-server model that w3up supports. We how to use `w3up-client` to achieve these options in this section.
 
-#### Direct upload from client
+#### Server-owned space with direct upload from end-user
 
 In this option, you (the developer) own your Space, but delegate permissions to your users to directly upload content to the service on your behalf. This isn’t completely “serverless” - you still need some infrastructure to create delegated UCAN tokens, but it’s minimal, and potentially saves a ton of bandwidth and overhead.
 
-- _To-do: Include instructions_
+> 🔜 _More detail coming soon!_
 
-If you explore this option, contributions are welcome to these docs to help others in the future (and to reveal feature requests and bugs that we can patch to improve this implementation path)! Also feel free to chime into the discussion here. (_to-do: add link to github discussion on topic_)
+If you explore this option, contributions are welcome to these docs to help others in the future (and to reveal feature requests and bugs that we can patch to improve this implementation path)! Also feel free to chime into the discussion [here](https://github.com/web3-storage/w3up-client/discussions/92).
 
 #### User-owned
 
-In this option, your user owns their own Space. This option is the most web3-native and probably the most interesting one. It comes with a world of possibilities; for instance, instead of generating  a new Space keypair for your user, you might look into using the existing keypair from their Metamask wallet or Apple Passkey. However, there are also likely edge cases that will appear early on for developers developing these types of apps that we haven’t (e.g., user flows when a user already has a w3up account with one app and is ).
+In this option, your user owns their own Space. This option is the most web3-native (since your user owns their own identity, and thus their own data) and probably the most interesting one. It comes with a world of possibilities; for instance, instead of generating  a new Space keypair for your user, you might look into using the existing keypair from their Metamask wallet or Apple Passkey. However, there are also likely edge cases that will appear early on for developers developing these types of apps that we haven’t had a chance to think much about yet, best-practices for various requirements (e.g., how much visibility do you want into user activity), and useful features that we could support.
 
-We haven’t had a chance to explore this option enough to firmly suggest how to best get started with this implementation type, but at a high level, we’d recommend:
-- _To-do: Include instructions_
+> 🔜 _More detail coming soon!_
 
-If you explore this option, contributions are welcome to these docs to help others in the future (and to reveal feature requests and bugs that we can patch to improve this implementation path)! Also feel free to chime into the discussion here. (_to-do: add link to github discussion on topic_)
+If you explore this option, contributions are welcome to these docs to help others in the future (and to reveal feature requests and bugs that we can patch to improve this implementation path)! Also feel free to chime into the discussion [here](https://github.com/web3-storage/w3up-client/discussions/93).
 
 ## API
 
