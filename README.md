@@ -1,3 +1,13 @@
+### ⚠️ DEPRECATED 
+
+We [moved](https://github.com/web3-storage/w3protocol/pull/653) this package to [another repository](https://github.com/web3-storage/w3protocol/tree/main/packages/w3up-client).
+
+[5.1.0](https://github.com/web3-storage/w3up-client/releases/tag/v5.1.0) was the last release from this repository. [5.2.0](https://github.com/web3-storage/w3protocol/releases/tag/w3up-client-v5.2.0) was the first release from the new repository.
+
+This deprecated repository [will be archived](https://github.com/web3-storage/w3up-client/issues/98).
+
+---
+
 <h1 align="center"><img src="https://bafybeia4luuns6dgymy5kau5rm7r4qzrrzg6cglpzpogussprpy42cmcn4.ipfs.w3s.link/w3up-logo.png" width="352" /></h1>
 <p align="center">The main JavaScript client for the w3up platform by <a href="https://web3.storage">https://web3.storage</a></p>
 <p align="center">
