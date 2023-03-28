@@ -1,5 +1,12 @@
 # Changelog
 
+## [5.1.1](https://github.com/web3-storage/w3up-client/compare/v5.1.0...v5.1.1) (2023-03-28)
+
+
+### Bug Fixes
+
+* redundant README info ([9753243](https://github.com/web3-storage/w3up-client/commit/975324381c1c757217329dcf5ea0dc7857ecf77e))
+
 ## [5.1.0](https://github.com/web3-storage/w3up-client/compare/v5.0.0...v5.1.0) (2023-03-24)
 
 
